@@ -1,0 +1,21 @@
+#образ контейнера, в котором будет выполняться ci пайплайн
+image: python:3.8
+#экономия времени на установку
+variables:
+  PIP_CACHE_DIR: "$CI_PROJECT_DIR/.cache/pip"
+
+cache:
+  paths:
+    - .cache/pip
+    - venv/
+
+#до запуска основных действий пайплайна создаём виртуальное окружение и активируем его
+before_script:
+  - python --version
+  - pip install virtualenv
+  - virtualenv venv
+  - source venv/bin/activate
+
+test:
+  script:
+    - python -m unittest discover -s ".tests" -p "*_test.py"
